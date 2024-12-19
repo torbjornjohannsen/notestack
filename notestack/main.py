@@ -1,4 +1,3 @@
-#!/home/tb/dev/notestack/bin/python3
 import argparse
 import pickle
 import heapq
@@ -74,33 +73,32 @@ def many(args):
     if args['pop']: 
         saveNotes(allNotes)
     
+def run():
+    parser = argparse.ArgumentParser(
+        prog="Note Stack",
+        description="A priority queue of notes, who consist of a link as well as a message(and possible priority)"
+    )
 
-parser = argparse.ArgumentParser(
-    prog="Note Stack",
-    description="A priority queue of notes, who consist of a link as well as a message(and possible priority)"
-)
+    ourputParent = argparse.ArgumentParser(add_help=False)
+    ourputParent.add_argument('--pop',action='store_true', help="Remove the top level")
 
-ourputParent = argparse.ArgumentParser(add_help=False)
-ourputParent.add_argument('--pop',action='store_true', help="Remove the top level")
+    subparsers = parser.add_subparsers()
 
-subparsers = parser.add_subparsers()
+    addParser = subparsers.add_parser(name="add")
+    topParser = subparsers.add_parser(name="top", parents=[ourputParent])
+    manyParser = subparsers.add_parser(name="many", parents=[ourputParent])
 
-addParser = subparsers.add_parser(name="add")
-topParser = subparsers.add_parser(name="top", parents=[ourputParent])
-manyParser = subparsers.add_parser(name="many", parents=[ourputParent])
+    addParser.add_argument('-l', type=str, help="Link, the required top level attribute of a note in the stack", required=True)
+    addParser.add_argument('-p', type=int, default=1, help="priority, by defauly 1. Priority is sorted high to low")
+    addParser.add_argument('-m', type=str, help="Message, an optional message to add to the entry")
+    addParser.set_defaults(func=add)
 
-addParser.add_argument('-l', type=str, help="Link, the required top level attribute of a note in the stack", required=True)
-addParser.add_argument('-p', type=int, default=1, help="priority, by defauly 1. Priority is sorted high to low")
-addParser.add_argument('-m', type=str, help="Message, an optional message to add to the entry")
-addParser.set_defaults(func=add)
+    topParser.set_defaults(func=top)
 
-topParser.set_defaults(func=top)
-
-manyParser.add_argument('--all', action='store_true', help="return all the notes")
-manyParser.add_argument('-n', default=10, type=int,  help="How many values to return. Note that this is overriden by --all")
-manyParser.set_defaults(func=many)
+    manyParser.add_argument('--all', action='store_true', help="return all the notes")
+    manyParser.add_argument('-n', default=10, type=int,  help="How many values to return. Note that this is overriden by --all")
+    manyParser.set_defaults(func=many)
 
 
-
-args = parser.parse_args()
-args.func(vars(args))
+    args = parser.parse_args()
+    args.func(vars(args))
