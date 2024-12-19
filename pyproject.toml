@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "notestack"            # The name of your project
+version = "0.1.0"            # The version of your project
+description = "Simple priority queue terminal note program"  # Project description
+
+[tool.setuptools]
+packages = ["notestack"]       # The name of the package folder
+
+[project.scripts]
+notestack = "notestack.main:run"  # Command `myscript` runs the `main()` function in `myscript.main`
